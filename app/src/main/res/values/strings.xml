@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AppLock</string>
+    <string name="accessibility_service_name">Applock</string>
+    <string name="accessibility_service_description">Please allow Accessibility Permission</string>
+    <string name="alert_message">To run Applock Properly Please allow Permission </string>
+    <string name="alert_enable">Enable</string>
+    <string name="alert_title">Service Permission</string>
+    <string name="app_title">AppLock</string>
+    <string name="alert_miui_title">Miui Detected!</string>
+    <string name="alert_miui_message">Miui requires an additional permission to work.\nOn the App\'s Information page, please go to \'Other Permissions\' and enable \'Display Pop Up while in background\'</string>
+    <string name="toast_miui_alert"><![CDATA[Go to Other Permissions > Display Pop Up while in background]]></string>
+</resources>
