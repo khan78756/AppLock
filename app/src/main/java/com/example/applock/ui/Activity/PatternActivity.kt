@@ -9,12 +9,16 @@ import android.widget.Toast
 import com.example.applock.R
 import com.example.applock.databinding.ActivityPatternBinding
 import com.example.applock.util.GlobalVariables
+import com.example.applock.util.SharedPreferenceManager
 import com.itsxtt.patternlock.PatternLockView
 
 class PatternActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityPatternBinding
+
+    private val prefManager by lazy { SharedPreferenceManager(applicationContext) }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +76,8 @@ class PatternActivity : AppCompatActivity() {
             override fun onComplete(ids: ArrayList<Int>):Boolean{
 
                 val pattern = ids.toString()
+                //IN CASE OF PREVIOUS PASSWORD
+                val str = sharedPref.getString("Lock", null)
 
 
                 //IN CASE OF NEW PASSWORD ENTERING
@@ -93,28 +99,33 @@ class PatternActivity : AppCompatActivity() {
                 {
 
 
-                    //CHECK IF COME FROM OUTER SIDE THEN DESTROY THIS ACTIVITY
+                    if (prefManager.readFlag() == 1){
+                        if (str == pattern){
+                        prefManager.flag(0)
+                        prefManager.flag1(0)
 
-                 /*   if (preferenceManager.getInt == 1) {
-                        System.exit(0)
-                    }*/
-
-                    //IN CASE OF PREVIOUS PASSWORD
-                    val str = sharedPref.getString("Lock", null)
+                        finish()
+                        return true
+                        }
+                        else{
+                            Toast.makeText(applicationContext, "Wrong Pattern", Toast.LENGTH_LONG)
+                                .show()
+                            return false
+                        }
+                    }
+                    else
+                    {
                     if (str == pattern) {
-
                         Intent(applicationContext, MainActivity::class.java).also {
                             startActivity(it)
                             finish()
-                            return true
                         }
+                        return true
                     } else {
                         Toast.makeText(applicationContext, "Wrong Pattern", Toast.LENGTH_LONG)
                             .show()
                         return false
-                    }
-
-
+                    }}
                 } } })
     }
 }

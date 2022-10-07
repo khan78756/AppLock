@@ -34,25 +34,40 @@ class CurrentAppService: AccessibilityService() {
                     val tempPackageName = info.packageName.trim()
                     if (tempPackageName.isNotEmpty() && currentFocusedPackage != tempPackageName) {
                         currentFocusedPackage=tempPackageName
-                        preferenceManager.specificData.putString("Lock",currentFocusedPackage).apply()
 
-                        var getdat=preferenceManager.getInt
+
+                        var getDta=preferenceManager.readString()
+                        var getFlag=preferenceManager.readFlag()
+                        var getFlag1=preferenceManager.readFlag1()
+
 
                         if (isPackageSaved(currentFocusedPackage)) {
-                            // preferenceManager.flag.putInt("Flag",0).apply()
-                            if (getdat == 0){
-                              //  preferenceManager.flag.putInt("Flag",1).apply()
+
+
+                            if(currentFocusedPackage == preferenceManager.readString()){
+                                preferenceManager.flag(1)
+                            }
+
+                               if (preferenceManager.readFlag() == 0){
+                                   preferenceManager.specificData(currentFocusedPackage)
+                                   preferenceManager.flag(1)
+                                   preferenceManager.flag1(1)
+
+
                                 startActivity(
                                     Intent(applicationContext, PatternActivity::class.java).apply {
                                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    })}
+                                     })}
                         }
-                        else {
-                            if (currentFocusedPackage != preferenceManager.getData){
-                                preferenceManager.specificData.clear().commit()
-
-
-                            }}
+                        else if(currentFocusedPackage != preferenceManager.readString() && preferenceManager.readFlag() == 1 &&
+                                preferenceManager.readFlag1() == 1){
+                        //Nothing Happen Due to some reason
+                        }
+                        else{
+                            preferenceManager.flag(0)
+                            preferenceManager.specificData("" +
+                                    "")
+                        }
                     }
                 }
             }

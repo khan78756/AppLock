@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         binding.fabSave.setOnClickListener {
             prefManager.saveAppsList(appAdapter.getCheckedApps())
             runAfterDelay(800L) {
-
+                Toast.makeText(this,"Successfully Locked",Toast.LENGTH_SHORT).show()
+                finish()
             }
         }
 

@@ -5,15 +5,22 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.LinearLayout
 import com.example.applock.R
+import com.example.applock.util.SharedPreferenceManager
 
 class Splash : AppCompatActivity() {
+
+
+    private val prefManager by lazy { SharedPreferenceManager(applicationContext) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
         val splash3=findViewById<LinearLayout>(R.id.llsplash)
 
-        //prefManager.flag.putInt("Flag",0).apply()
+        prefManager.flag(0)
+        prefManager.flag1(0)
+        prefManager.specificData("")
 
 
 
