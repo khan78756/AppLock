@@ -3,6 +3,7 @@ package com.example.applock.ui.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.LinearLayout
 import com.example.applock.R
 import com.example.applock.util.SharedPreferenceManager
@@ -14,12 +15,20 @@ class Splash : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+           getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.activity_splash)
+
+        //REMOVE ACTION BAR
+        if (supportActionBar != null) {
+            supportActionBar!!.hide()
+        }
 
         val splash3=findViewById<LinearLayout>(R.id.llsplash)
 
         prefManager.flag(0)
         prefManager.flag1(0)
+        prefManager.flag2(0)
         prefManager.specificData("")
 
 

@@ -10,6 +10,7 @@ class SharedPreferenceManager(context: Context) {
         const val APPS_KEY1 = "Lock"
         const val APPS_KEY2 = "Flag"
         const val APPS_KEY3 = "Flag1"
+        const val APPS_KEY4 = "Flag2"
 
     }
 
@@ -76,6 +77,20 @@ class SharedPreferenceManager(context: Context) {
         val raw3=sharedPreferences3.getInt(APPS_KEY3,0)
         return raw3
     }
+
+    fun flag2(flag: Int){
+        val editor3=sharedPreferences4.edit()
+        editor3.putInt(APPS_KEY3,flag)
+        editor3.apply()
+    }
+
+    fun readFlag2() :Int
+    {
+        val raw3=sharedPreferences4.getInt(APPS_KEY4,0)
+        return raw3
+    }
+
+
 
 
 

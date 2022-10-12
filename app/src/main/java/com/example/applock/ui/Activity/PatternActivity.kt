@@ -1,30 +1,35 @@
 package com.example.applock.ui.Activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.applock.R
 import com.example.applock.databinding.ActivityPatternBinding
 import com.example.applock.util.GlobalVariables
 import com.example.applock.util.SharedPreferenceManager
 import com.itsxtt.patternlock.PatternLockView
+import java.io.File
+
 
 class PatternActivity : AppCompatActivity() {
 
 
     private lateinit var binding: ActivityPatternBinding
-
     private val prefManager by lazy { SharedPreferenceManager(applicationContext) }
 
-
-
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
           binding= ActivityPatternBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
         //FOR THE PURPOSE OF PASSWORD SAVING
 
@@ -53,13 +58,15 @@ class PatternActivity : AppCompatActivity() {
 
 
         //FOR THE PURPOSE OF RESET PASSWORD
-        binding.btnClear.setOnClickListener {
-            editor.clear().commit()
+       /* binding.btnClear.setOnClickListener {
+           *//* editor.clear().apply()
             Intent(applicationContext, PatternActivity::class.java).also {
                 startActivity(it)
-            }
+                finish()
+            }*//*
+          //  deleteCache(this)
 
-        }
+        }*/
         //==================================================================================//
 
         //ON THE START OF PASSWORD DRAW
@@ -100,17 +107,16 @@ class PatternActivity : AppCompatActivity() {
 
 
                     if (prefManager.readFlag() == 1){
-                        if (str == pattern){
-                        prefManager.flag(0)
-                        prefManager.flag1(0)
-
-                        finish()
-                        return true
+                        return if (str == pattern){
+                            prefManager.flag(0)
+                            prefManager.flag1(0)
+                            finish()
+                            true
                         }
                         else{
                             Toast.makeText(applicationContext, "Wrong Pattern", Toast.LENGTH_LONG)
                                 .show()
-                            return false
+                            false
                         }
                     }
                     else
@@ -128,4 +134,39 @@ class PatternActivity : AppCompatActivity() {
                     }}
                 } } })
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+      /*  prefManager.flag(0)
+        prefManager.flag1(0)
+        prefManager.flag2(1)*/
+       // super.onBackPressed()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu1, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.getItemId()) {
+            R.id.item11 -> {
+                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                true
+            }
+            R.id.item22 -> {
+                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                true
+            }
+            R.id.item33 -> {
+                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
 }

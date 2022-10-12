@@ -2,14 +2,15 @@ package com.example.applock.Service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.ComponentName
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import com.example.applock.ui.Activity.PatternActivity
 import com.example.applock.util.SharedPreferenceManager
+
 
 class CurrentAppService: AccessibilityService() {
 
@@ -46,6 +47,17 @@ class CurrentAppService: AccessibilityService() {
 
                             if(currentFocusedPackage == preferenceManager.readString()){
                                 preferenceManager.flag(1)
+
+
+                             /*   if (preferenceManager.readFlag2() == 1){
+                              *//*  val am: ActivityManager =
+                                    getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                                if (am != null) {
+                                    val tasks: List<AppTask> = am.getAppTasks()
+                                    if (tasks != null && tasks.isNotEmpty()) {
+                                        tasks[0].setExcludeFromRecents(true)
+                                    }
+                                }*//*}*/
                             }
 
                                if (preferenceManager.readFlag() == 0){
@@ -65,8 +77,7 @@ class CurrentAppService: AccessibilityService() {
                         }
                         else{
                             preferenceManager.flag(0)
-                            preferenceManager.specificData("" +
-                                    "")
+                            preferenceManager.specificData("" + "")
                         }
                     }
                 }
@@ -91,4 +102,6 @@ class CurrentAppService: AccessibilityService() {
     override fun onInterrupt() {
         Log.d(TAG, "Service Interrupted!")
     }
+
+
 }
