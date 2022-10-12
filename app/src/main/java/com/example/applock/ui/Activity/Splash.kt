@@ -28,7 +28,6 @@ class Splash : AppCompatActivity() {
 
         prefManager.flag(0)
         prefManager.flag1(0)
-        prefManager.flag2(0)
         prefManager.specificData("")
 
 

@@ -13,6 +13,7 @@ import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.accessibility.AccessibilityManager
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,10 @@ import com.example.applock.databinding.ActivityMainBinding
 import com.example.applock.ui.Adapter.AppListAdapter
 import com.example.applock.util.SharedPreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.huawei.hms.ads.AdParam
+import com.huawei.hms.ads.BannerAdSize
+import com.huawei.hms.ads.HwAds
+import com.huawei.hms.ads.banner.BannerView
 import java.io.File
 
 
@@ -32,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     private val prefManager by lazy { SharedPreferenceManager(applicationContext) }
 
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         binding=ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -39,6 +46,25 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
+        //========================================================================================//
+        // Initialize the HUAWEI Ads SDK.
+        HwAds.init(this)
+        // Obtain BannerView.
+        var bannerView: BannerView? = findViewById(R.id.hw_banner_view)
+        // Set the ad unit ID and ad dimensions. "testw6vs28auh3" is a dedicated test ad unit ID.
+        bannerView!!.adId = "testw6vs28auh3"
+        bannerView!!.bannerAdSize = BannerAdSize.BANNER_SIZE_360_57
+        // Set the refresh interval to 60 seconds.
+        bannerView!!.setBannerRefresh(60)
+        // Create an ad request to load an ad.
+        val adParam = AdParam.Builder().build()
+        bannerView!!.loadAd(adParam)
+       //=======================================================================================//
+
+
+
+        //=========================================================================================//
         val appAdapter = AppListAdapter(applicationContext, prefManager.readAppsList())
         binding.rvApps.apply {
             layoutManager = LinearLayoutManager(applicationContext)
@@ -68,6 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        //bannerView!!.destroy()
       trimCache(this)
 
     }
@@ -133,6 +160,7 @@ class MainActivity : AppCompatActivity() {
         }, delay)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         val builder= AlertDialog.Builder(this)
         builder.setPositiveButton("Yes"){_,_ ->
@@ -155,15 +183,15 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.getItemId()) {
             R.id.item1 -> {
-                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"Feedback",Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.item2 -> {
-                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"Help",Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.item3 -> {
-                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"About",Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.item4 -> {
@@ -180,11 +208,13 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.item5 -> {
-                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                prefManager.flag2("")
+                Intent(applicationContext, PatternActivity::class.java).also {
+                    startActivity(it)
+                    finish()
+                }
                 true
             }
-
-
             else -> super.onOptionsItemSelected(item)
         }
     }

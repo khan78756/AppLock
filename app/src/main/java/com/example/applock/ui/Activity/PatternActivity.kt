@@ -13,6 +13,10 @@ import com.example.applock.R
 import com.example.applock.databinding.ActivityPatternBinding
 import com.example.applock.util.GlobalVariables
 import com.example.applock.util.SharedPreferenceManager
+import com.huawei.hms.ads.AdParam
+import com.huawei.hms.ads.BannerAdSize
+import com.huawei.hms.ads.HwAds
+import com.huawei.hms.ads.banner.BannerView
 import com.itsxtt.patternlock.PatternLockView
 import java.io.File
 
@@ -30,11 +34,19 @@ class PatternActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
-        //FOR THE PURPOSE OF PASSWORD SAVING
-
-        val  sharedPref=getSharedPreferences("myPref", Context.MODE_PRIVATE )
-        val editor=sharedPref.edit()
+        //========================================================================================//
+        // Initialize the HUAWEI Ads SDK.
+        HwAds.init(this)
+        // Obtain BannerView.
+        var bannerView: BannerView? = findViewById(R.id.hw_banner_view)
+        // Set the ad unit ID and ad dimensions. "testw6vs28auh3" is a dedicated test ad unit ID.
+        bannerView!!.adId = "testw6vs28auh3"
+        bannerView!!.bannerAdSize = BannerAdSize.BANNER_SIZE_360_57
+        // Set the refresh interval to 60 seconds.
+        bannerView!!.setBannerRefresh(60)
+        // Create an ad request to load an ad.
+        val adParam = AdParam.Builder().build()
+        bannerView!!.loadAd(adParam)
         //=================================================================================//
 
         //CHECK IF COME FROM OUTER SIDE THEN DESTROY THIS ACTIVITY
@@ -43,7 +55,7 @@ class PatternActivity : AppCompatActivity() {
 
         //CHECK IF PASSWORD IS NOT ALREADY SET
         if(!GlobalVariables.flagConfirm){
-            if (sharedPref.getString("Lock",null)==null)
+            if (prefManager.readFlag2()==null || prefManager.readFlag2()=="")
                 binding.tvPattern.text="Draw New Password"
             else{
                 binding.tvPattern.text="Enter Password"
@@ -52,21 +64,7 @@ class PatternActivity : AppCompatActivity() {
         else{
             binding.tvPattern.text="Confirm Password"
         }
-        //====================================================================================//
 
-
-
-
-        //FOR THE PURPOSE OF RESET PASSWORD
-       /* binding.btnClear.setOnClickListener {
-           *//* editor.clear().apply()
-            Intent(applicationContext, PatternActivity::class.java).also {
-                startActivity(it)
-                finish()
-            }*//*
-          //  deleteCache(this)
-
-        }*/
         //==================================================================================//
 
         //ON THE START OF PASSWORD DRAW
@@ -84,22 +82,26 @@ class PatternActivity : AppCompatActivity() {
 
                 val pattern = ids.toString()
                 //IN CASE OF PREVIOUS PASSWORD
-                val str = sharedPref.getString("Lock", null)
+               val str = prefManager.readFlag2()
 
 
                 //IN CASE OF NEW PASSWORD ENTERING
-                if(sharedPref.getString("Lock",null)==null)
+                if(prefManager.readFlag2() ==null || prefManager.readFlag2() == "")
                 {
                     Intent(applicationContext, PatternActivity::class.java).also {
                         startActivity(it)
 
-                        editor.apply {
+                        /*editor.apply {
                             putString("Lock", pattern)
                             apply()
-                            GlobalVariables.flagConfirm=true
-                            finish()
 
-                        }
+
+                        }*/
+                        prefManager.flag2(pattern)
+                        GlobalVariables.flagConfirm=true
+
+
+                        finish()
                         return true
                     }
                 }else
@@ -124,6 +126,7 @@ class PatternActivity : AppCompatActivity() {
                     if (str == pattern) {
                         Intent(applicationContext, MainActivity::class.java).also {
                             startActivity(it)
+                            trimCache(applicationContext)
                             finish()
                         }
                         return true
@@ -152,21 +155,48 @@ class PatternActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.getItemId()) {
             R.id.item11 -> {
-                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"FeedBack",Toast.LENGTH_LONG).show()
                 true
             }
             R.id.item22 -> {
-                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"Help",Toast.LENGTH_LONG).show()
                 true
             }
             R.id.item33 -> {
-                Toast.makeText(this,"Hello",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"About",Toast.LENGTH_LONG).show()
                 true
             }
 
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    fun trimCache(context: Context) {
+        try {
+            val dir = context.cacheDir
+            if (dir != null && dir.isDirectory) {
+                deleteDir(dir)
+            }
+        } catch (e: Exception) {
+            // TODO: handle exception
+        }
+    }
+
+    fun deleteDir(dir: File?): Boolean {
+        if (dir != null && dir.isDirectory) {
+            val children = dir.list()
+            for (i in children.indices) {
+                val success = deleteDir(File(dir, children[i]))
+                if (!success) {
+                    return false
+                }
+            }
+        }
+
+        // The directory is now empty so delete it
+        return dir!!.delete()
+    }
+
 
 
 }
