@@ -27,6 +27,7 @@ import com.huawei.hms.ads.AdParam
 import com.huawei.hms.ads.BannerAdSize
 import com.huawei.hms.ads.HwAds
 import com.huawei.hms.ads.banner.BannerView
+import com.huawei.hms.ads.splash.SplashView
 import java.io.File
 
 
@@ -76,6 +77,10 @@ class MainActivity : AppCompatActivity() {
             prefManager.saveAppsList(appAdapter.getCheckedApps())
             runAfterDelay(800L) {
                 Toast.makeText(this,"Successfully Locked",Toast.LENGTH_LONG).show()
+            }
+            Intent(this,SplashActivity::class.java).also {
+                startActivity(it)
+                finish()
             }
         }
 

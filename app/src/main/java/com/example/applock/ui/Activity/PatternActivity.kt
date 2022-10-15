@@ -5,18 +5,17 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Toast
+import android.util.Log
+import android.view.*
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.applock.R
 import com.example.applock.databinding.ActivityPatternBinding
 import com.example.applock.util.GlobalVariables
 import com.example.applock.util.SharedPreferenceManager
-import com.huawei.hms.ads.AdParam
-import com.huawei.hms.ads.BannerAdSize
-import com.huawei.hms.ads.HwAds
+import com.huawei.hms.ads.*
 import com.huawei.hms.ads.banner.BannerView
+import com.huawei.hms.ads.nativead.*
 import com.itsxtt.patternlock.PatternLockView
 import java.io.File
 
@@ -27,11 +26,22 @@ class PatternActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPatternBinding
     private val prefManager by lazy { SharedPreferenceManager(applicationContext) }
 
+
+    private lateinit var adScrollView: ScrollView
+    private var globalNativeAd: NativeAd? = null
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
           binding= ActivityPatternBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        adScrollView = findViewById(R.id.scroll_view_ad)
+
+        var adID="testr6w14o0hqz"
+
+        loadAd(adID)
 
 
         //========================================================================================//
@@ -198,5 +208,74 @@ class PatternActivity : AppCompatActivity() {
     }
 
 
+    /**
+     * Load a native ad.
+     *
+     * @param adId ad slot ID.
+     */
+    private fun loadAd(adId: String) {
+        val builder = NativeAdLoader.Builder(this, adId)
+        builder.setNativeAdLoadedListener { nativeAd -> // Call this method when an ad is successfully loaded.
+
+            // Display native ad.
+            showNativeAd(nativeAd)
+        }.setAdListener(object : AdListener() {
+            override fun onAdLoaded() {
+            }
+
+            override fun onAdFailed(errorCode: Int) {
+                // Call this method when an ad fails to be loaded.
+            }
+        })
+        val videoConfiguration = VideoConfiguration.Builder()
+            .setStartMuted(true)
+            .build()
+        val adConfiguration = NativeAdConfiguration.Builder()
+            .setChoicesPosition(NativeAdConfiguration.ChoicesPosition.BOTTOM_RIGHT) // Set custom attributes.
+            .setVideoConfiguration(videoConfiguration)
+            .setRequestMultiImages(true)
+            .build()
+        val nativeAdLoader = builder.setNativeAdOptions(adConfiguration).build()
+        nativeAdLoader.loadAd(AdParam.Builder().build())
+    }
+
+    /**
+     * Display native ad.
+     *
+     * @param nativeAd native ad object that contains ad materials.
+     */
+    private fun showNativeAd(nativeAd: NativeAd) {
+        // Destroy the original native ad.
+        if (null != globalNativeAd) {
+            globalNativeAd!!.destroy()
+        }
+        globalNativeAd = nativeAd
+        val nativeView: View = createNativeView(nativeAd, adScrollView)!!
+        if (nativeView != null) {
+            globalNativeAd!!.setDislikeAdListener { // Call this method when an ad is closed
+                adScrollView.removeView(nativeView)
+            }
+
+            // Add NativeView to the app UI.
+            adScrollView.removeAllViews()
+            adScrollView.addView(nativeView)
+        }
+    }
+
+    /**
+     * Create a nativeView by creativeType and fill in ad material.
+     *
+     * @param nativeAd   native ad object that contains ad materials.
+     * @param parentView parent view of nativeView.
+     */
+    private fun createNativeView(nativeAd: NativeAd, parentView: ViewGroup): View? {
+        val createType = nativeAd.creativeType
+       if (createType == 8 || createType == 108) {
+            // Three small images with text
+            return NativeViewFactory.createThreeImagesAdView(nativeAd, parentView)
+        } else {
+            return null
+        }
+    }
 
 }
