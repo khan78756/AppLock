@@ -38,9 +38,7 @@ class PatternActivity : AppCompatActivity() {
 
 
         adScrollView = findViewById(R.id.scroll_view_ad)
-
         var adID="testr6w14o0hqz"
-
         loadAd(adID)
 
 
@@ -96,19 +94,13 @@ class PatternActivity : AppCompatActivity() {
 
 
                 //IN CASE OF NEW PASSWORD ENTERING
-                if(prefManager.readFlag2() ==null || prefManager.readFlag2() == "")
+                if(prefManager.readFlag2() == null || prefManager.readFlag2() == "")
                 {
                     Intent(applicationContext, PatternActivity::class.java).also {
                         startActivity(it)
-
-                        /*editor.apply {
-                            putString("Lock", pattern)
-                            apply()
-
-
-                        }*/
                         prefManager.flag2(pattern)
                         GlobalVariables.flagConfirm=true
+                        overridePendingTransition(R.anim.sliderightin,R.anim.slideoutleft)
 
 
                         finish()
@@ -116,12 +108,11 @@ class PatternActivity : AppCompatActivity() {
                     }
                 }else
                 {
-
-
                     if (prefManager.readFlag() == 1){
                         return if (str == pattern){
                             prefManager.flag(0)
                             prefManager.flag1(0)
+                            Toast.makeText(applicationContext, "Wrong Pattern", Toast.LENGTH_LONG)
                             finish()
                             true
                         }
@@ -136,7 +127,7 @@ class PatternActivity : AppCompatActivity() {
                     if (str == pattern) {
                         Intent(applicationContext, MainActivity::class.java).also {
                             startActivity(it)
-                            trimCache(applicationContext)
+                           // trimCache(applicationContext)
                             finish()
                         }
                         return true
@@ -150,11 +141,9 @@ class PatternActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-      /*  prefManager.flag(0)
-        prefManager.flag1(0)
-        prefManager.flag2(1)*/
-       // super.onBackPressed()
+
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater

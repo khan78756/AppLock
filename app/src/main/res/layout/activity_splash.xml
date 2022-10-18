@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplashActivity">
+    tools:context=".ui.Activity.SplashActivity">
 
     <RelativeLayout
         android:id="@+id/logo_area"
@@ -32,7 +32,7 @@
                 <ImageView
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:background="@mipmap/ic_launcher" />
+                    android:background="@mipmap/ic_launcher2" />
 
                 <View
                     android:layout_width="0.5dp"

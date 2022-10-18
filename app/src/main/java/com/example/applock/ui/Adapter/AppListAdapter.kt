@@ -14,6 +14,8 @@ class AppListAdapter(private val context: Context, initialChecked: ArrayList<Str
     private val checkedAppList = arrayListOf<Boolean>()
     private val packageManager: PackageManager = context.packageManager
 
+
+
     init {
         context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA).sortedBy { it.loadLabel(packageManager).toString() }.forEach { info ->
             if (info.packageName != context.packageName) {

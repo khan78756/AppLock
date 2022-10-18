@@ -27,7 +27,7 @@ class Splash : AppCompatActivity() {
             supportActionBar!!.hide()
         }
 
-        val splash3=findViewById<ConstraintLayout>(R.id.llsplash)
+        val splash3=findViewById<LinearLayout>(R.id.llsplash)
 
         prefManager.flag(0)
         prefManager.flag1(0)
@@ -41,6 +41,7 @@ class Splash : AppCompatActivity() {
             val intent= Intent(this,PatternActivity::class.java)
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out)
+            overridePendingTransition(R.anim.sliderightin,R.anim.slideoutleft)
             finish()
 
         }

@@ -22,9 +22,12 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.widget.Toast
 import com.example.applock.R
+import com.google.android.material.snackbar.Snackbar
 import com.huawei.hms.ads.AdParam
 import com.huawei.hms.ads.AudioFocusType
+import com.huawei.hms.ads.it
 import com.huawei.hms.ads.splash.SplashAdDisplayListener
 import com.huawei.hms.ads.splash.SplashView
 import com.huawei.hms.ads.splash.SplashView.SplashAdLoadListener
@@ -97,16 +100,16 @@ class SplashActivity : Activity() {
         val orientation = screenOrientation
         // Set the default slogan and the splash ad unit ID based on the screen orientation on the device.
         slotId = if (orientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-            splashView!!.setSloganResId(R.drawable.default_slogan)
+         //   splashView!!.setSloganResId(R.drawable.default_slogan)
             getString(R.string.ad_id_splash)
         } else {
-            splashView!!.setSloganResId(R.drawable.default_slogan_landscape)
+          //  splashView!!.setSloganResId(R.drawable.default_slogan_landscape)
             getString(R.string.ad_id_splash_landscape)
         }
         splashView!!.setLogo(findViewById(R.id.logo_area))
 
         // Set a logo image.
-        splashView!!.setLogoResId(R.mipmap.ic_launcher)
+        splashView!!.setLogoResId(R.mipmap.ic_launcher2)
         // Set logo description.
         splashView!!.setMediaNameResId(R.string.media_name)
         // Set the audio focus type for a video splash ad.
@@ -140,7 +143,9 @@ class SplashActivity : Activity() {
             Log.i(TAG, "jump into application")
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             val mainHandler = Handler()
-            mainHandler.postDelayed({ finish() }, 1000)
+            mainHandler.postDelayed({
+                Toast.makeText(this,"Locked Successfully",Toast.LENGTH_LONG).show()
+                finish() }, 1000)
         }
     }
 

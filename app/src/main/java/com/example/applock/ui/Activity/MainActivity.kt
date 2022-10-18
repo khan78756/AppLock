@@ -23,6 +23,7 @@ import com.example.applock.databinding.ActivityMainBinding
 import com.example.applock.ui.Adapter.AppListAdapter
 import com.example.applock.util.SharedPreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.huawei.hms.ads.AdParam
 import com.huawei.hms.ads.BannerAdSize
 import com.huawei.hms.ads.HwAds
@@ -45,13 +46,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        //=========================================================================================//
+        val appAdapter = AppListAdapter(applicationContext, prefManager.readAppsList())
+        binding.rvApps.apply {
+            layoutManager = LinearLayoutManager(applicationContext)
+            adapter = appAdapter
+            setItemViewCacheSize(100)
+        }
+
 
 
 
         //========================================================================================//
         // Initialize the HUAWEI Ads SDK.
-        HwAds.init(this)
+       // HwAds.init(this)
         // Obtain BannerView.
+/*
         var bannerView: BannerView? = findViewById(R.id.hw_banner_view)
         // Set the ad unit ID and ad dimensions. "testw6vs28auh3" is a dedicated test ad unit ID.
         bannerView!!.adId = "testw6vs28auh3"
@@ -61,29 +71,25 @@ class MainActivity : AppCompatActivity() {
         // Create an ad request to load an ad.
         val adParam = AdParam.Builder().build()
         bannerView!!.loadAd(adParam)
-       //=======================================================================================//
+*/
 
 
 
-        //=========================================================================================//
-        val appAdapter = AppListAdapter(applicationContext, prefManager.readAppsList())
-        binding.rvApps.apply {
-            layoutManager = LinearLayoutManager(applicationContext)
-            adapter = appAdapter
-            setItemViewCacheSize(100)
-        }
+
+        //============================================================================================//
 
         binding.fabSave.setOnClickListener {
             prefManager.saveAppsList(appAdapter.getCheckedApps())
-            runAfterDelay(800L) {
-                Toast.makeText(this,"Successfully Locked",Toast.LENGTH_LONG).show()
-            }
+
             Intent(this,SplashActivity::class.java).also {
                 startActivity(it)
                 finish()
             }
-        }
 
+           /* runAfterDelay(800L) {
+                Toast.makeText(this,"Successfully Locked",Toast.LENGTH_LONG).show()
+            }*/
+        }
 
     }
 
@@ -97,11 +103,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        //bannerView!!.destroy()
-      trimCache(this)
-
+    override fun onStop() {
+        trimCache(this)
+        super.onStop()
     }
 
     private fun promptServiceOff() {
@@ -143,18 +147,25 @@ class MainActivity : AppCompatActivity() {
             setMessage(getString(com.example.applock.R.string.alert_miui_message))
             setPositiveButton(com.example.applock.R.string.alert_enable) { _, _ ->
                 Toast.makeText(applicationContext, getString(com.example.applock.R.string.toast_miui_alert), Toast.LENGTH_SHORT).show()
-                Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri = Uri.fromParts("package", packageName, null)
+                intent.data = uri
+                startActivity(intent)
+               /* Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                     val uri = Uri.fromParts("package", packageName, null)
                     intent.data = uri
                     startActivity(intent)
-                }, 500L)
+                }, 5L)*/
                 Toast.makeText(applicationContext, com.example.applock.R.string.toast_miui_alert, Toast.LENGTH_SHORT).show()
-                runAfterDelay(500L) {
+                startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", packageName, null)
+                })
+              /*  runAfterDelay(5L) {
                     startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                         data = Uri.fromParts("package", packageName, null)
                     })
-                }
+                }*/
             }
         }.show()
     }

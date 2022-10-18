@@ -29,10 +29,15 @@
         </activity>
         <activity
             android:name=".ui.Activity.PatternActivity"
-            android:exported="false"></activity>
+            android:exported="false"/>
+
         <activity
             android:name=".ui.Activity.MainActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
+        <activity android:name=".ui.Activity.SplashActivity"
+            android:exported="false">
+        </activity>
+
 
         <service
             android:name=".Service.CurrentAppService"
