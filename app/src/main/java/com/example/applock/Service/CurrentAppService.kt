@@ -36,26 +36,14 @@ class CurrentAppService: AccessibilityService() {
                     if (tempPackageName.isNotEmpty() && currentFocusedPackage != tempPackageName) {
                         currentFocusedPackage=tempPackageName
 
-
-                        var getDta=preferenceManager.readString()
-                        var getFlag=preferenceManager.readFlag()
-                        var getFlag1=preferenceManager.readFlag1()
-
-
                         if (isPackageSaved(currentFocusedPackage)) {
-
-
                             if(currentFocusedPackage == preferenceManager.readString()){
                                 preferenceManager.flag(1)
-
                             }
-
-                               if (preferenceManager.readFlag() == 0){
+                            if (preferenceManager.readFlag() == 0){
                                    preferenceManager.specificData(currentFocusedPackage)
                                    preferenceManager.flag(1)
                                    preferenceManager.flag1(1)
-
-
                                 startActivity(
                                     Intent(applicationContext, PatternActivity::class.java).apply {
                                         flags = Intent.FLAG_ACTIVITY_NEW_TASK

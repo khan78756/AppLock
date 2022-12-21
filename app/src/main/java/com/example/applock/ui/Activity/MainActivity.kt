@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,22 +14,21 @@ import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.accessibility.AccessibilityManager
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.applock.R
 import com.example.applock.Service.CurrentAppService
 import com.example.applock.databinding.ActivityMainBinding
-import com.example.applock.ui.Adapter.AppListAdapter
+import com.example.applock.ui.Adapter.InstalledAppListAdapter
+import com.example.applock.ui.Adapter.LookedAPPS
+import com.example.applock.util.GlobalVariables
 import com.example.applock.util.SharedPreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
+import com.huawei.hms.ads.AdListener
 import com.huawei.hms.ads.AdParam
 import com.huawei.hms.ads.BannerAdSize
-import com.huawei.hms.ads.HwAds
 import com.huawei.hms.ads.banner.BannerView
-import com.huawei.hms.ads.splash.SplashView
 import java.io.File
 
 
@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private val prefManager by lazy { SharedPreferenceManager(applicationContext) }
 
 
+    val busyCursor=loadingDialog(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,49 +47,44 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+
+            val appAdapter = InstalledAppListAdapter(applicationContext, prefManager.readAppsList())
+
+            binding.rvApps.apply {
+                layoutManager = LinearLayoutManager(applicationContext)
+                adapter = appAdapter
+                binding.rvApps.setHasFixedSize(true)
+                setItemViewCacheSize(10)
+            }
+
+
+
         //=========================================================================================//
-        val appAdapter = AppListAdapter(applicationContext, prefManager.readAppsList())
-        binding.rvApps.apply {
+
+
+        loadBannerAdd()
+
+
+     val lookedAdapter=LookedAPPS(applicationContext,prefManager.readAppsList())
+        binding.rvLockedapps.apply {
             layoutManager = LinearLayoutManager(applicationContext)
-            adapter = appAdapter
-            setItemViewCacheSize(100)
+
+            binding.rvApps.setHasFixedSize(true)
+            adapter = lookedAdapter
+            setItemViewCacheSize(10)
+
         }
-
-
-
-
-        //========================================================================================//
-        // Initialize the HUAWEI Ads SDK.
-       // HwAds.init(this)
-        // Obtain BannerView.
-/*
-        var bannerView: BannerView? = findViewById(R.id.hw_banner_view)
-        // Set the ad unit ID and ad dimensions. "testw6vs28auh3" is a dedicated test ad unit ID.
-        bannerView!!.adId = "testw6vs28auh3"
-        bannerView!!.bannerAdSize = BannerAdSize.BANNER_SIZE_360_57
-        // Set the refresh interval to 60 seconds.
-        bannerView!!.setBannerRefresh(60)
-        // Create an ad request to load an ad.
-        val adParam = AdParam.Builder().build()
-        bannerView!!.loadAd(adParam)
-*/
-
-
-
 
         //============================================================================================//
 
         binding.fabSave.setOnClickListener {
-            prefManager.saveAppsList(appAdapter.getCheckedApps())
+            prefManager.saveAppsList(lookedAdapter.getCheckedApps1())
 
             Intent(this,SplashActivity::class.java).also {
                 startActivity(it)
                 finish()
             }
 
-           /* runAfterDelay(800L) {
-                Toast.makeText(this,"Successfully Locked",Toast.LENGTH_LONG).show()
-            }*/
         }
 
     }
@@ -105,6 +101,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         trimCache(this)
+       // finish()
         super.onStop()
     }
 
@@ -190,6 +187,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(com.example.applock.R.menu.menu, menu)
@@ -260,6 +259,52 @@ class MainActivity : AppCompatActivity() {
         // The directory is now empty so delete it
         return dir!!.delete()
     }
+
+    private fun loadBannerAdd(){
+        var bannerView: BannerView? = findViewById(R.id.hw_banner_view)
+        bannerView!!.adId = "testw6vs28auh3"
+        bannerView.bannerAdSize = BannerAdSize.BANNER_SIZE_360_57
+        bannerView.adListener = adListener
+        bannerView.setBannerRefresh(60)
+        val adParam = AdParam.Builder().build()
+        bannerView.loadAd(adParam)
+    }
+
+
+    private val adListener: AdListener = object : AdListener() {
+        override fun onAdLoaded() {
+            // Called when an ad is loaded successfully.
+          //  Toast.makeText(applicationContext,"Successfully Loaded",Toast.LENGTH_LONG).show()
+        }
+
+        override fun onAdFailed(errorCode: Int) {
+            // Called when an ad fails to be loaded.
+          //  Toast.makeText(applicationContext,"Failed to Load Add",Toast.LENGTH_LONG).show()
+        }
+
+        override fun onAdOpened() {
+            // Called when an ad is opened.
+           // Toast.makeText(applicationContext,"Add is opened",Toast.LENGTH_LONG).show()
+        }
+
+        override fun onAdClicked() {
+            // Called when a user taps an ad.
+
+          //  Toast.makeText(applicationContext,"Add Clicked",Toast.LENGTH_LONG).show()
+        }
+
+        override fun onAdLeave() {
+            // Called when a user has left the app.
+
+          //  Toast.makeText(applicationContext,"Add leave",Toast.LENGTH_LONG).show()
+        }
+
+        override fun onAdClosed() {
+            // Called when an ad is closed.
+          //  Toast.makeText(applicationContext,"Add Closed",Toast.LENGTH_LONG).show()
+        }
+    }
+
 
 
 

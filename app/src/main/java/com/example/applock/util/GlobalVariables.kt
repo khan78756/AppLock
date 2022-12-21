@@ -4,5 +4,6 @@ class GlobalVariables {
     companion object{
         @JvmStatic
         var flagConfirm: Boolean=false
+        var pause:Boolean=false
     }
 }

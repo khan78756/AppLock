@@ -7,8 +7,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.applock.databinding.ItemAppBinding
+import com.example.applock.databinding.SystemItemsBinding
 
-class AppListAdapter(private val context: Context, initialChecked: ArrayList<String> = arrayListOf()) : RecyclerView.Adapter<AppListAdapter.AppViewHolder>()  {
+class SystemAppListAdapter(private val context: Context, initialChecked: ArrayList<String> = arrayListOf()) : RecyclerView.Adapter<SystemAppListAdapter.AppViewHolder>()  {
 
     private val appList = arrayListOf<ApplicationInfo>()
     private val checkedAppList = arrayListOf<Boolean>()
@@ -19,15 +20,16 @@ class AppListAdapter(private val context: Context, initialChecked: ArrayList<Str
     init {
         context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA).sortedBy { it.loadLabel(packageManager).toString() }.forEach { info ->
             if (info.packageName != context.packageName) {
-                if (info.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
+                if (packageManager.getLaunchIntentForPackage(info.packageName) == null) {
                     appList.add(info)
                     checkedAppList.add(initialChecked.contains(info.packageName))
+
                 }
             }
         }
     }
 
-    inner class AppViewHolder(private val item: ItemAppBinding) : RecyclerView.ViewHolder(item.root) {
+    inner class AppViewHolder(private val item: SystemItemsBinding) : RecyclerView.ViewHolder(item.root) {
         fun bind(data: ApplicationInfo, position: Int) {
 
             item.txApp.text = data.loadLabel(packageManager)
@@ -40,12 +42,15 @@ class AppListAdapter(private val context: Context, initialChecked: ArrayList<Str
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppViewHolder {
-        return AppViewHolder(ItemAppBinding.inflate(LayoutInflater.from(context), parent, false))
+        return AppViewHolder(SystemItemsBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
     override fun onBindViewHolder(holder: AppViewHolder, position: Int) {
         holder.bind(appList[position], position)
     }
+
+
+
 
     override fun getItemCount(): Int {
         return appList.size
@@ -60,4 +65,8 @@ class AppListAdapter(private val context: Context, initialChecked: ArrayList<Str
         }
         return checkedApps
     }
+
+
+
+
 }

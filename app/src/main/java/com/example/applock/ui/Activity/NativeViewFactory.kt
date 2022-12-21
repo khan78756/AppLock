@@ -22,6 +22,73 @@ class NativeViewFactory {
 
         private val TAG = NativeViewFactory::class.java.simpleName
 
+        fun createMediumAdView(nativeAd: NativeAd, parentView: ViewGroup): View? {
+            val inflater = LayoutInflater.from(parentView.context)
+            val adRootView: View = inflater.inflate(R.layout.native_common_medium_template, null)
+            val nativeView: NativeView = adRootView.findViewById(R.id.native_medium_view)
+            nativeView.titleView = adRootView.findViewById(R.id.ad_title)
+            nativeView.mediaView = adRootView.findViewById<View>(R.id.ad_media) as MediaView
+            nativeView.adSourceView = adRootView.findViewById(R.id.ad_source)
+            nativeView.callToActionView = adRootView.findViewById(R.id.ad_call_to_action)
+
+            // Populate a native ad material view.
+            (nativeView.titleView as TextView).text = nativeAd.title
+            nativeView.mediaView.setMediaContent(nativeAd.mediaContent)
+            if (null != nativeAd.adSource) {
+                (nativeView.adSourceView as TextView).text = nativeAd.adSource
+            }
+            nativeView.adSourceView.visibility =
+                if (null != nativeAd.adSource) View.VISIBLE else View.INVISIBLE
+            if (null != nativeAd.callToAction) {
+                (nativeView.callToActionView as Button).text = nativeAd.callToAction
+            }
+            nativeView.callToActionView.visibility =
+                if (null != nativeAd.callToAction) View.VISIBLE else View.INVISIBLE
+
+            // Obtain a video controller.
+            val videoOperator = nativeAd.videoOperator
+
+            // Check whether a native ad contains video materials.
+            if (videoOperator.hasVideo()) {
+                // Add a video lifecycle event listener.
+                videoOperator.videoLifecycleListener = object : VideoLifecycleListener() {
+                    override fun onVideoStart() {
+                        Log.i(NativeViewFactory.TAG, "NativeAd video play start.")
+                    }
+
+                    override fun onVideoPlay() {
+                        Log.i(NativeViewFactory.TAG, "NativeAd video playing.")
+                    }
+
+                    override fun onVideoEnd() {
+                        Log.i(NativeViewFactory.TAG, "NativeAd video play end.")
+                    }
+                }
+            }
+
+            // Register a native ad object.
+            nativeView.setNativeAd(nativeAd)
+            return nativeView
+        }
+
+        fun createImageOnlyAdView(nativeAd: NativeAd, parentView: ViewGroup): View? {
+            val inflater = LayoutInflater.from(parentView.context)
+            val adRootView: View = inflater.inflate(R.layout.native_image_only_template, null)
+            val nativeView: NativeView = adRootView.findViewById(R.id.native_image_only_view)
+            nativeView.mediaView = adRootView.findViewById<View>(R.id.ad_media) as MediaView
+            nativeView.callToActionView = adRootView.findViewById(R.id.ad_call_to_action)
+            nativeView.mediaView.setMediaContent(nativeAd.mediaContent)
+            if (null != nativeAd.callToAction) {
+                (nativeView.callToActionView as Button).text = nativeAd.callToAction
+            }
+            nativeView.callToActionView.visibility =
+                if (null != nativeAd.callToAction) View.VISIBLE else View.INVISIBLE
+
+            // Register a native ad object.
+            nativeView.setNativeAd(nativeAd)
+            return nativeView
+        }
+
         fun createThreeImagesAdView(nativeAd: NativeAd, parentView: ViewGroup): View? {
             val inflater = LayoutInflater.from(parentView.context)
             val adRootView: View = inflater.inflate(R.layout.native_three_images_template, null)

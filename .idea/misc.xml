@@ -6,16 +6,20 @@
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/drawable-v24/native_button_rounded_corners_shape.xml" value="0.2455" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/drawable-v24/native_flag_rounded_corners_shape.xml" value="0.172" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/drawable/feedback.xml" value="0.256" />
+        <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/drawable/native_button_rounded_corners_shape.xml" value="0.117" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/activity_pattern.xml" value="0.2" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/activity_splash.xml" value="0.22826086956521738" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/activity_splash2.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/header.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/item_app.xml" value="0.22826086956521738" />
+        <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/native_common_medium_template.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/native_image_only_template.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/native_small_image_template.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/native_three_images_template.xml" value="0.1" />
+        <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/progress_bar.xml" value="0.25416666666666665" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/splash.xml" value="0.2857142857142857" />
+        <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/layout/system_items.xml" value="0.253125" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/menu/menu.xml" value="0.253125" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/menu/menu1.xml" value="0.253125" />
         <entry key="..\:/AndroidstudioProjects/AppLock2/app/src/main/res/xml/service.xml" value="0.22826086956521738" />

@@ -53,17 +53,20 @@ class SplashActivity : Activity() {
         override fun onAdLoaded() {
             // Call this method when an ad is successfully loaded.
             Log.i(TAG, "SplashAdLoadListener onAdLoaded.")
+           // Toast.makeText(this@SplashActivity, "Successfully Load Splash ad", Toast.LENGTH_SHORT).show()
         }
 
         override fun onAdFailedToLoad(errorCode: Int) {
             // Call this method when an ad fails to be loaded.
             Log.i(TAG, "SplashAdLoadListener onAdFailedToLoad, errorCode: $errorCode")
+          //  Toast.makeText(this@SplashActivity, "Error", Toast.LENGTH_SHORT).show()
             jump()
         }
 
         override fun onAdDismissed() {
             // Call this method when the ad display is complete.
             Log.i(TAG, "SplashAdLoadListener onAdDismissed.")
+       //     Toast.makeText(this@SplashActivity, "Dismiss", Toast.LENGTH_SHORT).show()
             jump()
         }
     }
@@ -71,11 +74,15 @@ class SplashActivity : Activity() {
         override fun onAdShowed() {
             // Call this method when an ad is displayed.
             Log.i(TAG, "SplashAdDisplayListener onAdShowed.")
+
+           // Toast.makeText(this@SplashActivity, "Successfully showed", Toast.LENGTH_SHORT).show()
         }
 
         override fun onAdClick() {
             // Call this method when an ad is clicked.
             Log.i(TAG, "SplashAdDisplayListener onAdClick.")
+
+           // Toast.makeText(this@SplashActivity, "add is Clicked", Toast.LENGTH_SHORT).show()
         }
     }
 
